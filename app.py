@@ -1,7 +1,5 @@
 import os
 from flask import Flask, render_template, request
-import requests
-from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -12,27 +10,23 @@ def index():
         product = request.form.get('product')
         price = request.form.get('price')
         
-        # Simple Logic for Analysis
         if product and price:
             try:
-                price_val = int(price)
-                if price_val < 500:
-                    advice = "Low competition segment. Good for high volume."
-                else:
-                    advice = "Premium segment. Focus on branding and ads."
-                
+                # Basic analysis logic
+                p = int(price)
+                advice = "Good price point!" if p < 1000 else "High-end product strategy needed."
                 analysis_result = {
                     "status": "Success",
                     "product": product,
                     "price": price,
-                    "market_trend": "Rising",
                     "advice": advice
                 }
-            except:
-                analysis_result = {"status": "Error", "message": "Invalid price entered."}
+            except Exception as e:
+                analysis_result = {"status": "Error", "message": "Please enter a valid number."}
         
     return render_template('index.html', result=analysis_result)
 
 if __name__ == '__main__':
+    # Render ke liye ye settings zaroori hain
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
